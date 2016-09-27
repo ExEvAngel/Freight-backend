@@ -6,24 +6,20 @@ var options = {
 };
 
 var pgp = require('pg-promise')(options);
-var connectionString = 'postgres://localhost:5432/consignments';
+var connectionString = 'postgres://localhost:5432/freightforward';
 var db = pgp(connectionString);
-/*
-function getAllPuppies(req, res, next) {
-  db.any('select * from pups')
+
+function getAllCons(req, res, next) {
+  db.any('select * from consignments')
     .then(function (data) {
       res.status(200)
-        .json({
-          status: 'success',
-          data: data,
-          message: 'Retrieved ALL puppies'
-        });
+        .json(data[0]);
     })
     .catch(function (err) {
       return next(err);
     });
 }
-
+/*
 function getSinglePuppy(req, res, next) {
   var pupID = parseInt(req.params.id);
   db.one('select * from pups where id = $1', pupID)
@@ -93,8 +89,8 @@ function removePuppy(req, res, next) {
 
 module.exports = {
   getAllCons: getAllCons,
-  getSingleCon: getSingleCon,
+  /*getSingleCon: getSingleCon,
   createCon: createCon,
   updateCon: updateCon,
-  removeCon: removeCon
+  removeCon: removeCon*/
 };
