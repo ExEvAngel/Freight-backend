@@ -8,6 +8,8 @@ var bodyParser = require('body-parser');
 var routes = require('./routes/index');
 var users = require('./routes/users');
 
+var stormpath = require('express-stormpath');
+
 var app = express();
 
 // view engine setup
@@ -22,7 +24,19 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', routes);
+app.use(stormpath.init(app, {
+  expand: {
+    customData: true,
+    groups: true,
+  },
+  web: {
+    produces: ['application/json']
+  }
+}))
+
+app.use('/',  routes);
+//app.use('/', stormpath.apiAuthenticationRequired,  routes);
+
 app.use('/users', users);
 
 // catch 404 and forward to error handler
