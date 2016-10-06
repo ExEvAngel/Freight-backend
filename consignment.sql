@@ -38,8 +38,8 @@ CREATE TABLE consignments (
 
 INSERT INTO consignments (conId, payTerm, custRef, sendAcc, sendName, sendAddress, sendCity, sendPostCode, sendCountry,
 sendContactName, sendContactNo, recAcc, recName, recAddress, recCity, recPostCode, recCountry, recContactName, recContactNo, service, 
-options, dg, noPiece, description, value, currency, userId, parked)
-  VALUES ('123456789', 'S', 'testCon', 123456, 'Angel', '12 Bulter Road', 'Pemulwuy', '2145', 'Australia', 'Angel', '0412345678', "NK",
+opt, dg, noPiece, description, value, currency, userId, parked)
+  VALUES ('123456789', 'S', 'testCon', 123456, 'Angel', '12 Bulter Road', 'Pemulwuy', '2145', 'Australia', 'Angel', '0412345678', 'NK',
   'Jude', '12 Butler Road', 'Pemulwuy', '2145', 'Australia','Jude', '0412345679', '15N', 'Priority', FALSE, 1, 'Documents', 100.00, 'AUD',
   'J360MYE', FALSE);
 

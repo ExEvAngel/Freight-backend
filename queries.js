@@ -6,14 +6,30 @@ var options = {
 };
 
 var pgp = require('pg-promise')(options);
-var connectionString = 'postgres://localhost:5432/freightforward';
+var config = {
+  "USER"  : "angelo",
+  "PASS"  : "password",
+  "HOST"  : "postgresql1.cmlrmfaa5t5d.ap-southeast-2.rds.amazonaws.com",
+  "PORT"  : "5432",
+  "DATABASE"  : "postgresql1"
+};
+
+var connectionString = 'postgres://'+config.USER+':'+
+  config.PASS+'@'+
+  config.HOST+':'+
+  config.PORT+'/'+
+  config.DATABASE;
+
+//var db = pgp("postgres://angelo:password@postgresql1.cmlrmfaa5t5d.ap-southeast-2.rds.amazonaws.com:5432/postgresql1");
+//var connectionString = "postgres://angelo:password@postgresql1.cmlrmfaa5t5d.ap-southeast-2.rds.amazonaws.com:5432/postgresql1";
 var db = pgp(connectionString);
+// add query functions
 
 function getAllCons(req, res, next) {
   db.any('select * from consignments')
     .then(function (data) {
       res.status(200)
-        .json(data[0]);
+        .json({consignments: data});
     })
     .catch(function (err) {
       return next(err);
