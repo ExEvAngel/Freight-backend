@@ -34,7 +34,27 @@ function getAllCons(req, res, next) {
     .catch(function (err) {
       return next(err);
     });
+
+
 }
+
+function createCon(req, res, next) {
+  req.body.age = parseInt(req.body.age);
+  db.none('insert into consignments(conid, payterm, custref, senaAcc, sendname, sendaddress, sendcity, sendpostcode, sendcountry,sendcontactname, sendcontactno,recacc, recName, recaddress, reccity, recpostcode, reccountry, reccontactname, reccontactno,service,opt, dg, noiece, description, value, currency, userid, parked)'+
+    'values(${conid}, ${payterm}, ${custref}, ${sendacc},${sendname},${sendaddress},${sendcity},${sendpostcode},${sendcountry},${sendcontactname},${sendcontactno},${recacc},${recname},${recaddress},${reccity},${recpostcode},${reccountry},${reccontactname},${reccontactno},${service},${opt},${dg},${nopiece},${description},${value},${curency},${userid},${parked})',
+    req.body)
+    .then(function () {
+      res.status(200)
+        .json({
+          status: 'success',
+          message: 'Inserted one con'
+        });
+    })
+    .catch(function (err) {
+      return next(err);
+    });
+}
+
 /*
 function getSinglePuppy(req, res, next) {
   var pupID = parseInt(req.params.id);
@@ -45,23 +65,6 @@ function getSinglePuppy(req, res, next) {
           status: 'success',
           data: data,
           message: 'Retrieved ONE puppy'
-        });
-    })
-    .catch(function (err) {
-      return next(err);
-    });
-}
-
-function createPuppy(req, res, next) {
-  req.body.age = parseInt(req.body.age);
-  db.none('insert into pups(name, breed, age, sex)' +
-      'values(${name}, ${breed}, ${age}, ${sex})',
-    req.body)
-    .then(function () {
-      res.status(200)
-        .json({
-          status: 'success',
-          message: 'Inserted one puppy'
         });
     })
     .catch(function (err) {

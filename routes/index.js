@@ -7,8 +7,9 @@ router.get('/', function(req, res, next) {
   res.render('index', { title: 'Express' });
 });
 
-router.get('/api/cons', db.getAllCons);/*
-router.get('/api/puppies/:id', db.getSinglePuppy);
+router.get('/api/cons', db.getAllCons);
+/*router.post('/api/cons', db.createCon);*//*
+router.get('/api/create/:id', db.getSinglePuppy);
 router.post('/api/puppies', db.createPuppy);
 router.put('/api/puppies/:id', db.updatePuppy);
 router.delete('/api/puppies/:id', db.removePuppy);*/
