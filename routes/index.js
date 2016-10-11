@@ -8,7 +8,12 @@ router.get('/', function(req, res, next) {
 });
 
 router.get('/api/cons', db.getAllCons);
-/*router.post('/api/cons', db.createCon);*//*
+router.post('/api/cons', db.createCon);
+router.get('/api/:userid/cons', db.getUserCons);
+router.get('/api/cons/parked', db.getParkedCons);
+router.put('/api/:conid/park',db.parkCon);
+
+/*
 router.get('/api/create/:id', db.getSinglePuppy);
 router.post('/api/puppies', db.createPuppy);
 router.put('/api/puppies/:id', db.updatePuppy);
