@@ -29,7 +29,7 @@ function getAllCons(req, res, next) {
   db.any('select * from consignments')
     .then(function (data) {
       res.status(200)
-        .json({consignments: data});
+        .json(data);
     })
     .catch(function (err) {
       return next(err);
