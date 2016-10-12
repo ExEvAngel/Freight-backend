@@ -81,8 +81,8 @@ function getParkedCons(req, res, next){
 }
 
 function parkCon(req, res, next) {
-  var conid = parseInt(req.params.conid);
-  db.none('update consignments set parked = true where conid=$1', conid)
+  var id = parseInt(req.params.id);
+  db.none('update consignments set parked = true where id=$1', id)
     .then(function () {
       res.status(200)
         .json({
@@ -96,8 +96,8 @@ function parkCon(req, res, next) {
 }
 
 function unParkCon(req, res, next) {
-  var conid = parseInt(req.params.conid);
-  db.none('update consignments set parked = false where conid=$1', conid)
+  var id = parseInt(req.params.id);
+  db.none('update consignments set parked = false where id=$1', id)
     .then(function () {
       res.status(200)
         .json({
@@ -111,8 +111,8 @@ function unParkCon(req, res, next) {
 }
 
 function removeCon(req, res, next) {
-  var conid = parseInt(req.params.conid);
-  db.result('delete from consignments where id = $1', conid)
+  var id = parseInt(req.params.id);
+  db.result('delete from consignments where id = $1', id)
     .then(function (result) {
       /* jshint ignore:start */
       res.status(200)
