@@ -110,6 +110,23 @@ function unParkCon(req, res, next) {
     });
 }
 
+function removeCon(req, res, next) {
+  var conid = parseInt(req.params.conid);
+  db.result('delete from consignments where id = $1', conid)
+    .then(function (result) {
+      /* jshint ignore:start */
+      res.status(200)
+        .json({
+          status: 'success',
+          message: `Removed ${result.rowCount} cons`
+        });
+      /* jshint ignore:end */
+    })
+    .catch(function (err) {
+      return next(err);
+    });
+}
+
 
 
 /*
@@ -187,8 +204,9 @@ module.exports = {
   getParkedCons: getParkedCons,
   parkCon: parkCon,
   unParkCon: unParkCon,
+  removeCon: removeCon,
   /*getSingleCon: getSingleCon,
   createCon: createCon,
   updateCon: updateCon,
-  removeCon: removeCon*/
+  */
 };

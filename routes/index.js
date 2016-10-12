@@ -9,10 +9,11 @@ router.get('/', function(req, res, next) {
 
 router.get('/api/cons', db.getAllCons);
 router.post('/api/cons', db.createCon);
-router.get('/api/:userid/cons', db.getUserCons);
+router.get('/api/user/:userid/cons', db.getUserCons);
 router.get('/api/cons/parked', db.getParkedCons);
-router.put('/api/:conid/park',db.parkCon);
-router.put('/api/:conid/unpark',db.unParkCon);
+router.put('/api/cons/:conid/park',db.parkCon);
+router.put('/api/cons/:conid/unpark',db.unParkCon);
+router.delete('/api/cons/:conid', db.removeCon)
 
 /*
 router.get('/api/create/:id', db.getSinglePuppy);
