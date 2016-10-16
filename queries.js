@@ -20,8 +20,6 @@ var connectionString = 'postgres://'+config.USER+':'+
   config.PORT+'/'+
   config.DATABASE;
 
-//var db = pgp("postgres://angelo:password@postgresql1.cmlrmfaa5t5d.ap-southeast-2.rds.amazonaws.com:5432/postgresql1");
-//var connectionString = "postgres://angelo:password@postgresql1.cmlrmfaa5t5d.ap-southeast-2.rds.amazonaws.com:5432/postgresql1";
 var db = pgp(connectionString);
 // add query functions
 
@@ -36,6 +34,29 @@ function getAllCons(req, res, next) {
     });
 
 
+}
+function getContacts(req, res, next) {
+  db.any('select * from contacts')
+    .then(function (data) {
+      res.status(200)
+        .json(data);
+    })
+    .catch(function (err) {
+      return next(err);
+    });
+
+
+}
+function getUserCons(req, res, next) {
+  var userId = req.params.userid;
+  db.any('select * from consignments where userid = $1', userId)
+    .then(function (data) {
+      res.status(200)
+        .json({consignments: data});
+    })
+    .catch(function (err) {
+      return next(err);
+    });
 }
 
 function createCon(req, res, next) {
@@ -57,17 +78,6 @@ function createCon(req, res, next) {
     });
 }
 
-function getUserCons(req, res, next) {
-  var userId = req.params.userid;
-  db.any('select * from consignments where userid = $1', userId)
-    .then(function (data) {
-      res.status(200)
-        .json({consignments: data});
-    })
-    .catch(function (err) {
-      return next(err);
-    });
-}
 
 function getParkedCons(req, res, next){
   db.any('select * from consignments where parked = true')
@@ -198,6 +208,7 @@ function removePuppy(req, res, next) {
 
 
 module.exports = {
+  getContacts: getContacts,
   getAllCons: getAllCons,
   createCon: createCon,
   getUserCons: getUserCons,

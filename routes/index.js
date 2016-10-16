@@ -8,6 +8,7 @@ router.get('/', function(req, res, next) {
 });
 
 router.get('/api/cons', db.getAllCons);
+router.get('/api/contacts', db.getContacts);
 router.post('/api/cons', db.createCon);
 router.get('/api/user/:userid/cons', db.getUserCons);
 router.get('/api/cons/parked', db.getParkedCons);
@@ -15,11 +16,6 @@ router.put('/api/cons/:id/park',db.parkCon);
 router.put('/api/cons/:id/unpark',db.unParkCon);
 router.delete('/api/cons/:id', db.removeCon)
 
-/*
-router.get('/api/create/:id', db.getSinglePuppy);
-router.post('/api/puppies', db.createPuppy);
-router.put('/api/puppies/:id', db.updatePuppy);
-router.delete('/api/puppies/:id', db.removePuppy);*/
 
 
 module.exports = router;
