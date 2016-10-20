@@ -155,12 +155,14 @@ function getAllConTracking(req, res, next){
 function createConTracking(req, res, next) {
   var cid = parseInt(req.params.id);
   var userid = req.user.email;
-  db.none('insert into tracking(status, remarks, depot, userid, date, cid)'+
-    'values($1, $2, $3, $4,$5, $6)',
-    [req.body.status, req.body.remarks, req.body.depot, userid, req.body.date, cid])
-    .then(function () {
+  var conid = parseInt(req.body.conid);
+  db.none('insert into tracking(status, remarks, depot, userid, date, cid, conid)'+
+    'values($1, $2, $3, $4,$5, $6, $7)',
+    [req.body.status, req.body.remarks, req.body.depot, userid, req.body.date, cid, conid])
+    .then(function (data) {
       res.status(200)
         .json({
+          data:   data,
           status: 'success',
           message: 'Updated Tracking'
         });
