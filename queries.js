@@ -152,6 +152,20 @@ function getAllConTracking(req, res, next){
 }
 
 
+
+function getAllConByNumTracking(req, res, next){
+  var conid = parseInt(req.params.id);
+  db.any('select * from tracking where conid = $1', conid)
+    .then(function (data){
+      res.status(200)
+        .json(data);
+    })
+    .catch(function (err){
+      return next(err);
+    })
+}
+
+
 function createConTracking(req, res, next) {
   var cid = parseInt(req.params.id);
   var userid = req.user.email;
@@ -269,7 +283,9 @@ module.exports = {
   removeCon: removeCon,
   createConTracking: createConTracking,
   getAllConTracking: getAllConTracking,
+  getAllConByNumTracking: getAllConByNumTracking,
   removeConTracking: removeConTracking,
+
 
   /*
   getTrackingDetail: getTrackingDetail,

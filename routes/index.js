@@ -17,6 +17,7 @@ router.put('/api/cons/:id/unpark',db.unParkCon);
 router.delete('/api/cons/:id', db.removeCon);
 router.post('/api/cons/:id/tracking', db.createConTracking);
 router.get('/api/cons/:id/tracking', db.getAllConTracking);
+router.get('/api/cons/num/:id/tracking', db.getAllConByNumTracking);
 router.delete('/api/cons/:id/tracking/:tid', db.removeConTracking);
 /*
 router.get('/api/cons/:id/tracking/:tid', db.getTrackingDetail)
