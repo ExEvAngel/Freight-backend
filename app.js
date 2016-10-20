@@ -32,8 +32,8 @@ app.use(stormpath.init(app, {
   }
 }))
 
-app.use('/', stormpath.apiAuthenticationRequired, routes);
-//app.use('/', routes);
+//app.use('/', stormpath.apiAuthenticationRequired, routes);
+app.use('/', routes);
 
 
 
