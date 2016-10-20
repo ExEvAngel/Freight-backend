@@ -52,7 +52,7 @@ function getUserCons(req, res, next) {
   db.any('select * from consignments where userid = $1', userId)
     .then(function (data) {
       res.status(200)
-        .json({consignments: data});
+        .json(data);
     })
     .catch(function (err) {
       return next(err);
@@ -63,9 +63,10 @@ function createCon(req, res, next) {
   var conid = parseInt(req.body.conid);
   var nopiece = parseInt(req.body.nopiece);
   var value = parseFloat(req.body.value);
+  var userid = req.user.email;
   db.none('insert into consignments(conid, payterm, custref, sendacc, sendname, sendaddress, sendcity, sendpostcode, sendcountry,sendcontactname, sendcontactno,recacc, recname, recaddress, reccity, recpostcode, reccountry, reccontactname, reccontactno,service,opt, dg, nopiece, description, value, currency, userid, parked,creationdate)'+
     'values($1, $2, $3, $4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21,$22,$23,$24,$25,$26,$27,$28,$29)',
-    [conid,req.body.payterm,req.body.custref,req.body.sendacc,req.body.sendname,req.body.sendaddress,req.body.sendcity,req.body.sendpostcode,req.body.sendcountry,req.body.sendcontactname,req.body.sendcontactno,req.body.recacc,req.body.recname,req.body.recaddress,req.body.reccity,req.body.recpostcode,req.body.reccountry,req.body.reccontactname,req.body.reccontactno,req.body.service,req.body.opt,req.body.dg,nopiece,req.body.description,value,req.body.currency,req.body.userid,req.body.parked,req.body.creationdate])
+    [conid,req.body.payterm,req.body.custref,req.body.sendacc,req.body.sendname,req.body.sendaddress,req.body.sendcity,req.body.sendpostcode,req.body.sendcountry,req.body.sendcontactname,req.body.sendcontactno,req.body.recacc,req.body.recname,req.body.recaddress,req.body.reccity,req.body.recpostcode,req.body.reccountry,req.body.reccontactname,req.body.reccontactno,req.body.service,req.body.opt,req.body.dg,nopiece,req.body.description,value,req.body.currency,email,req.body.parked,req.body.creationdate])
     .then(function () {
       res.status(200)
         .json({
@@ -83,7 +84,7 @@ function getParkedCons(req, res, next){
   db.any('select * from consignments where parked = true')
     .then(function (data){
       res.status(200)
-        .json({consignments: data});
+        .json(data);
     })
     .catch(function (err){
       return next(err);
@@ -137,7 +138,55 @@ function removeCon(req, res, next) {
     });
 }
 
+//Tracking
+function getAllConTracking(req, res, next){
+  var cid = parseInt(req.params.id);
+  db.any('select * from tracking where cid = $1', cid)
+    .then(function (data){
+      res.status(200)
+        .json(data);
+    })
+    .catch(function (err){
+      return next(err);
+    })
+}
 
+
+function createConTracking(req, res, next) {
+  var cid = parseInt(req.params.id);
+  var userid = req.user.email;
+  db.none('insert into tracking(status, remarks, depot, userid, date, cid)'+
+    'values($1, $2, $3, $4,$5, $6)',
+    [req.body.status, req.body.remarks, req.body.depot, userid, req.body.date, cid])
+    .then(function () {
+      res.status(200)
+        .json({
+          status: 'success',
+          message: 'Updated Tracking'
+        });
+    })
+    .catch(function (err) {
+      return next(err);
+    });
+}
+
+function removeConTracking(req, res, next) {
+  var cid = parseInt(req.params.id);
+  var tid = parseInt(req.params.tid);
+  db.result('delete from tracking where id = $1 and cid = $2', [tid, cid])
+    .then(function (result) {
+      /* jshint ignore:start */
+      res.status(200)
+        .json({
+          status: 'success',
+          message: `Removed ${result.rowCount} Tracking`
+        });
+      /* jshint ignore:end */
+    })
+    .catch(function (err) {
+      return next(err);
+    });
+}
 
 /*
 
@@ -216,8 +265,22 @@ module.exports = {
   parkCon: parkCon,
   unParkCon: unParkCon,
   removeCon: removeCon,
-  /*getSingleCon: getSingleCon,
+  createConTracking: createConTracking,
+  getAllConTracking: getAllConTracking,
+  removeConTracking: removeConTracking,
+
+  /*
+  getTrackingDetail: getTrackingDetail,
+  updateTrackingDetail: updateTrackingDetail, 
+
+  getSingleCon: getSingleCon,
   createCon: createCon,
   updateCon: updateCon,
+
+
+router.post('/api/cons/:id/tracking', db.createConTracking);
+router.get('/api/cons/:id/tracking', db.getAllConTracking);
+router.get('/api/cons/:id/tracking/:tid', db.getTrackingDetail)
+router.put('/api/cons/:id/tracking/:tid',db.upDateTrackingDetail);
   */
 };

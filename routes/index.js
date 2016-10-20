@@ -14,7 +14,13 @@ router.get('/api/user/:userid/cons', db.getUserCons);
 router.get('/api/cons/parked', db.getParkedCons);
 router.put('/api/cons/:id/park',db.parkCon);
 router.put('/api/cons/:id/unpark',db.unParkCon);
-router.delete('/api/cons/:id', db.removeCon)
+router.delete('/api/cons/:id', db.removeCon);
+router.post('/api/cons/:id/tracking', db.createConTracking);
+router.get('/api/cons/:id/tracking', db.getAllConTracking);
+router.delete('/api/cons/:id/tracking/:tid', db.removeConTracking);
+/*
+router.get('/api/cons/:id/tracking/:tid', db.getTrackingDetail)
+router.put('/api/cons/:id/tracking/:tid',db.updateTrackingDetail);*/
 
 
 

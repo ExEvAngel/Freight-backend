@@ -52,3 +52,17 @@ opt, dg, noPiece, description, value, currency, userId, parked, creationdate)
 
 
   COMMIT;
+
+
+  status, remarks, depot, userid, date, cid, con
+
+DROP TABLE IF EXISTS tracking;
+CREATE TABLE tracking (
+  ID SERIAL PRIMARY KEY,
+  status VARCHAR,
+  remarks VARCHAR,
+  depot VARCHAR,
+  userid VARCHAR,
+  date  date,
+  cid INTEGER,
+  );
