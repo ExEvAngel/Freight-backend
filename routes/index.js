@@ -19,6 +19,12 @@ router.post('/api/cons/:id/tracking', db.createConTracking);
 router.get('/api/cons/:id/tracking', db.getAllConTracking);
 router.get('/api/cons/num/:id/tracking', db.getAllConByNumTracking);
 router.delete('/api/cons/:id/tracking/:tid', db.removeConTracking);
+
+router.get('/api/pickup', db.getPickup);
+router.post('/api/pickup', db.createPickup);
+router.delete('/api/pickup/:id', db.deletePickup);
+router.get('/api/pickup/driver/:userid', db.getDriverPickups);
+router.put('/api/pickup/:id/driver/:userid', db.rejectDriverPickup);
 /*
 router.get('/api/cons/:id/tracking/:tid', db.getTrackingDetail)
 router.put('/api/cons/:id/tracking/:tid',db.updateTrackingDetail);*/

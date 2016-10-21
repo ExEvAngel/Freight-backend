@@ -4,7 +4,6 @@ var options = {
   // Initialization Options
   promiseLib: promise
 };
-
 var pgp = require('pg-promise')(options);
 var config = {
   "USER"  : "angelo",
@@ -204,6 +203,96 @@ function removeConTracking(req, res, next) {
     });
 }
 
+function getPickup(req, res, next) {
+  db.any('select cid,conid,sendname,sendaddress,sendcity,sendpostcode,description,nopiece,dg,driver from consignments t1 inner join pickups t2 ON t1.id = t2.cid')
+    .then(function (data) {
+      res.status(200)
+        .json(data);
+    })
+    .catch(function (err) {
+      return next(err);
+    });
+}
+
+function createPickup(req, res, next) {
+  var cid = parseInt(req.params.id);
+  db.none('insert into pickups(cid, driver, pickup)'+
+    'values($1, $2, $3)',
+    [cid, req.body.driver, req.body.pickup])
+    .then(function (data) {
+      res.status(200)
+        .json({
+          status: 'success',
+          message: 'Updated Tracking'
+        });
+    })
+    .catch(function (err) {
+      return next(err);
+    });
+}
+
+function deletePickup(req, res, next) {
+  var cid = parseInt(req.params.id);
+  db.none('delete from pickups where cid = $1', cid)
+    .then(function (data) {
+      res.status(200)
+        .json({
+          status: 'success',
+          message: 'Updated Tracking'
+        });
+    })
+    .catch(function (err) {
+      return next(err);
+    });
+}
+
+function getDriverPickups(req, res, next) {
+  var userId = req.params.userid;
+  db.any('select cid,conid,sendname,sendaddress,sendcity,sendpostcode,description,nopiece,dg,driver from consignments t1 inner join pickups t2 ON t1.id = t2.cid where pickup=true and driver=$1', userId)
+    .then(function (data) {
+      res.status(200)
+        .json(data);
+    })
+    .catch(function (err) {
+      return next(err);
+    });
+}
+
+function rejectDriverPickup(req, res, next) {
+  var cid = parseInt(req.params.id);
+  var userId = req.params.userid;
+  db.none('update pickups set pickup = false where cid = $1 and driver = $2', [cid, userId])
+    .then(function (data) {
+      res.status(200)
+        .json({
+          status: 'success',
+          message: 'Updated Tracking'
+        });
+    })
+    .catch(function (err) {
+      return next(err);
+    });
+}
+/*
+//SELECT * FROM t1 LEFT JOIN t2 ON t1.num = t2.num
+function getDriverPickups(req, res, next){
+  var cid = parseInt(req.params.id);
+  db.any('select * from pickup where driver = $1', cid)
+    .then(function (data){
+      res.status(200)
+        .json(data);
+    })
+    .catch(function (err){
+      return next(err);
+    })
+}
+
+getPickup: getPickup,
+  createPickup: createPickup,
+  rejectPickup: rejectPickup,
+  getDriverPickup: getDriverPickup,
+  rejectDriverPickup: rejectDriverPickup,
+
 /*
 
 function createCon(req, res, next) {
@@ -285,7 +374,11 @@ module.exports = {
   getAllConTracking: getAllConTracking,
   getAllConByNumTracking: getAllConByNumTracking,
   removeConTracking: removeConTracking,
-
+  getPickup: getPickup,
+  createPickup: createPickup,
+  deletePickup: deletePickup,
+  getDriverPickups: getDriverPickups,
+  rejectDriverPickup: rejectDriverPickup,
 
   /*
   getTrackingDetail: getTrackingDetail,

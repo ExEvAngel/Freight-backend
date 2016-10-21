@@ -26,13 +26,13 @@ CREATE TABLE consignments (
   recContactNo VARCHAR,
   service VARCHAR,
   opt VARCHAR,
-  dg BOOLEAN,
+  dg BOOLEAN NOT NULL DEFAULT FALSE,
   noPiece INTEGER,
   description VARCHAR,
   value DECIMAL,
   currency VARCHAR,
   userId VARCHAR,
-  parked BOOLEAN,
+  parked BOOLEAN NOT NULL DEFAULT FALSE,
   creationDate VARCHAR
 );
 
@@ -64,5 +64,15 @@ CREATE TABLE tracking (
   depot VARCHAR,
   userid VARCHAR,
   date  date,
-  cid INTEGER,
+  cid INTEGER
+  connote, INTEGER,
   );
+
+DROP TABLE IF EXISTS pickups;
+CREATE TABLE pickups (
+  cid INTEGER,
+  driver VARCHAR,
+  pickup BOOLEAN not null default true
+  );
+
+INSERT INTO pickups(cid, driver, pickup) VALUES (1,'J360MYE', FALSE);
