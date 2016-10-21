@@ -215,10 +215,9 @@ function getPickup(req, res, next) {
 }
 
 function createPickup(req, res, next) {
-  var cid = parseInt(req.params.id);
   db.none('insert into pickups(cid, driver, pickup)'+
     'values($1, $2, $3)',
-    [cid, req.body.driver, req.body.pickup])
+    [req.body.cid, req.body.driver, req.body.pickup])
     .then(function (data) {
       res.status(200)
         .json({
