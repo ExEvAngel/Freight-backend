@@ -6,6 +6,11 @@ var db = require('../queries');
 router.get('/', function(req, res, next) {
   res.render('index', { title: 'Express' });
 });
+router.post('/api/user/fcmtoken', db.createUserToken);
+router.put('/api/user/fcmtoken', db.updateUserToken);
+router.get('/api/user/fcmtoken', db.getToken);
+router.get('/api/user/:uid/fcmtoken', db.getUserToken);
+router.delete('/api/user/:uid', db.removeUserToken);
 
 router.get('/api/cons', db.getAllCons);
 router.get('/api/contacts', db.getContacts);

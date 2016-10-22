@@ -20,7 +20,78 @@ var connectionString = 'postgres://'+config.USER+':'+
   config.DATABASE;
 
 var db = pgp(connectionString);
-// add query functions
+
+function createUserToken(req, res, next) {
+  var userid = req.user.email;
+  db.none('insert into fcmdb(userid, token)'+
+    'values($1, $27)',
+    [userid,req.body.token])
+    .then(function () {
+      res.status(200)
+        .json({
+          status: 'success',
+          message: 'Inserted token'
+        });
+    })
+    .catch(function (err) {
+      return next(err);
+    });
+}
+function updateUserToken(req, res, next) {
+  var userid = req.user.email;
+  db.none('update fcmdb set token= $1 where userid = $2',
+    [req.body.token,userid])
+    .then(function () {
+      res.status(200)
+        .json({
+          status: 'success',
+          message: 'Inserted token'
+        });
+    })
+    .catch(function (err) {
+      return next(err);
+    });
+}
+
+function getToken(req, res, next) {
+  var userid = req.user.email;
+  db.any('select token from fcmdb where userid = $1', userid)
+    .then(function (data) {
+      res.status(200)
+        .json(data);
+    })
+    .catch(function (err) {
+      return next(err);
+    });
+}
+
+function getUserToken(req, res, next) {
+  var userid = req.params.uid;
+  db.any('select token from fcmdb where userid = $1', userid)
+    .then(function (data) {
+      res.status(200)
+        .json(data);
+    })
+    .catch(function (err) {
+      return next(err);
+    });
+}
+
+function removeUserToken(req, res, next) {
+  var cid = parseInt(req.params.id);
+  db.none('delete from pickups where cid = $1', cid)
+    .then(function (data) {
+      res.status(200)
+        .json({
+          status: 'success',
+          message: 'Updated Tracking'
+        });
+    })
+    .catch(function (err) {
+      return next(err);
+    });
+}
+
 
 function getAllCons(req, res, next) {
   db.any('select * from consignments')
@@ -43,8 +114,6 @@ function getContacts(req, res, next) {
     .catch(function (err) {
       return next(err);
     });
-
-
 }
 function getUserCons(req, res, next) {
   var userId = req.params.userid;
@@ -177,7 +246,7 @@ function createConTracking(req, res, next) {
         .json({
           data:   data,
           status: 'success',
-          message: 'Updated Tracking'
+          message: 'Created Tracking'
         });
     })
     .catch(function (err) {
@@ -222,7 +291,7 @@ function createPickup(req, res, next) {
       res.status(200)
         .json({
           status: 'success',
-          message: 'Updated Tracking'
+          message: 'Created Pickup'
         });
     })
     .catch(function (err) {
@@ -237,7 +306,7 @@ function deletePickup(req, res, next) {
       res.status(200)
         .json({
           status: 'success',
-          message: 'Updated Tracking'
+          message: 'Deleted Pickup'
         });
     })
     .catch(function (err) {
@@ -265,7 +334,7 @@ function rejectDriverPickup(req, res, next) {
       res.status(200)
         .json({
           status: 'success',
-          message: 'Updated Tracking'
+          message: 'Rejected Pickup'
         });
     })
     .catch(function (err) {
@@ -280,7 +349,7 @@ function completeDriverPickup(req, res, next) {
       res.status(200)
         .json({
           status: 'success',
-          message: 'Updated Tracking'
+          message: 'Completed Pickup'
         });
     })
     .catch(function (err) {
@@ -295,102 +364,20 @@ function clearDriverPickup(req, res, next) {
       res.status(200)
         .json({
           status: 'success',
-          message: 'Updated Tracking'
+          message: 'Cleared Pickup'
         });
     })
     .catch(function (err) {
       return next(err);
     });
 }
-/*
-//SELECT * FROM t1 LEFT JOIN t2 ON t1.num = t2.num
-function getDriverPickups(req, res, next){
-  var cid = parseInt(req.params.id);
-  db.any('select * from pickup where driver = $1', cid)
-    .then(function (data){
-      res.status(200)
-        .json(data);
-    })
-    .catch(function (err){
-      return next(err);
-    })
-}
-
-getPickup: getPickup,
-  createPickup: createPickup,
-  rejectPickup: rejectPickup,
-  getDriverPickup: getDriverPickup,
-  rejectDriverPickup: rejectDriverPickup,
-
-/*
-
-function createCon(req, res, next) {
-  req.body.age = parseInt(req.body.age);
-  db.none('insert into consignments(conid, payterm, custref, sendacc, sendname, sendaddress, sendcity, sendpostcode, sendcountry,sendcontactname, sendcontactno,recacc, recname, recaddress, reccity, recpostcode, reccountry, reccontactname, reccontactno,service,opt, dg, nopiece, description, value, currency, userid, parked,creationdate)'+
-    'values(${conid}, ${payterm}, ${custref}, ${sendacc},${sendname},${sendaddress},${sendcity},${sendpostcode},${sendcountry},${sendcontactname},${sendcontactno},${recacc},${recname},${recaddress},${reccity},${recpostcode},${reccountry},${reccontactname},${reccontactno},${service},${opt},${dg},${nopiece},${description},${value},${curency},${userid},${parked})',
-      req.body)
-    .then(function () {
-      res.status(200)
-        .json({
-          status: 'success',
-          message: 'Inserted one con'
-        });
-    })
-    .catch(function (err) {
-      return next(err);
-    });
-}
-function getSinglePuppy(req, res, next) {
-  var pupID = parseInt(req.params.id);
-  db.one('select * from pups where id = $1', pupID)
-    .then(function (data) {
-      res.status(200)
-        .json({
-          status: 'success',
-          data: data,
-          message: 'Retrieved ONE puppy'
-        });
-    })
-    .catch(function (err) {
-      return next(err);
-    });
-}
-
-function updatePuppy(req, res, next) {
-  db.none('update pups set name=$1, breed=$2, age=$3, sex=$4 where id=$5',
-    [req.body.name, req.body.breed, parseInt(req.body.age),
-      req.body.sex, parseInt(req.params.id)])
-    .then(function () {
-      res.status(200)
-        .json({
-          status: 'success',
-          message: 'Updated puppy'
-        });
-    })
-    .catch(function (err) {
-      return next(err);
-    });
-}
-
-function removePuppy(req, res, next) {
-  var pupID = parseInt(req.params.id);
-  db.result('delete from pups where id = $1', pupID)
-    .then(function (result) {
-      /* jshint ignore:start *//*
-      res.status(200)
-        .json({
-          status: 'success',
-          message: `Removed ${result.rowCount} puppy`
-        });
-      /* jshint ignore:end *//*
-    })
-    .catch(function (err) {
-      return next(err);
-    });
-}*/
-
 
 module.exports = {
+  createUserToken:createUserToken,
+  updateUserToken:updateUserToken,
+  getToken:getToken,
+  getUserToken:getUserToken,
+  removeUserToken:removeUserToken,
   getContacts: getContacts,
   getAllCons: getAllCons,
   createCon: createCon,

@@ -72,7 +72,15 @@ DROP TABLE IF EXISTS pickups;
 CREATE TABLE pickups (
   cid INTEGER,
   driver VARCHAR,
-  pickup BOOLEAN not null default true
+  pickup BOOLEAN default TRUE
   );
 
-INSERT INTO pickups(cid, driver, pickup) VALUES (1,'J360MYE', FALSE);
+INSERT INTO pickups(cid, driver, pickup) VALUES (1,'J360MYE', TRUE);
+INSERT INTO pickups(cid, driver, pickup) VALUES (1,'J360MYE', TRUE);
+
+
+DROP TABLE IF EXISTS pickups;
+CREATE TABLE fcmdb (
+  userid VARCHAR,
+  token VARCHAR
+  );
