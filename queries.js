@@ -247,7 +247,7 @@ function deletePickup(req, res, next) {
 
 function getDriverPickups(req, res, next) {
   var userId = req.params.userid;
-  db.any('select cid,conid,sendname,sendaddress,sendcity,sendpostcode,description,nopiece,dg,driver from consignments t1 inner join pickups t2 ON t1.id = t2.cid where pickup=true and driver=$1', userId)
+  db.any('select cid,conid,sendname,sendaddress,sendcity,sendpostcode,description,nopiece,dg,driver from consignments t1 inner join pickups t2 ON t1.id = t2.cid where pickup IS NULL and driver=$1', userId)
     .then(function (data) {
       res.status(200)
         .json(data);
@@ -261,6 +261,36 @@ function rejectDriverPickup(req, res, next) {
   var cid = parseInt(req.params.id);
   var userId = req.params.userid;
   db.none('update pickups set pickup = false where cid = $1 and driver = $2', [cid, userId])
+    .then(function (data) {
+      res.status(200)
+        .json({
+          status: 'success',
+          message: 'Updated Tracking'
+        });
+    })
+    .catch(function (err) {
+      return next(err);
+    });
+}
+function completeDriverPickup(req, res, next) {
+  var cid = parseInt(req.params.id);
+  var userId = req.params.userid;
+  db.none('update pickups set pickup = true where cid = $1 and driver = $2', [cid, userId])
+    .then(function (data) {
+      res.status(200)
+        .json({
+          status: 'success',
+          message: 'Updated Tracking'
+        });
+    })
+    .catch(function (err) {
+      return next(err);
+    });
+}
+function clearDriverPickup(req, res, next) {
+  var cid = parseInt(req.params.id);
+  var userId = req.params.userid;
+  db.none('update pickups set pickup = NULL where cid = $1 and driver = $2', [cid, userId])
     .then(function (data) {
       res.status(200)
         .json({
@@ -378,6 +408,8 @@ module.exports = {
   deletePickup: deletePickup,
   getDriverPickups: getDriverPickups,
   rejectDriverPickup: rejectDriverPickup,
+  completeDriverPickup: completeDriverPickup,
+  clearDriverPickup: clearDriverPickup,
 
   /*
   getTrackingDetail: getTrackingDetail,

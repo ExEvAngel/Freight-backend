@@ -24,7 +24,9 @@ router.get('/api/pickup', db.getPickup);
 router.post('/api/pickup', db.createPickup);
 router.delete('/api/pickup/:id', db.deletePickup);
 router.get('/api/pickup/driver/:userid', db.getDriverPickups);
-router.put('/api/pickup/:id/driver/:userid', db.rejectDriverPickup);
+router.put('/api/pickup/:id/driver/:userid/complete', db.completeDriverPickup);
+router.put('/api/pickup/:id/driver/:userid/reject', db.rejectDriverPickup);
+router.put('/api/pickup/:id/driver/:userid/undo', db.clearDriverPickup);
 /*
 router.get('/api/cons/:id/tracking/:tid', db.getTrackingDetail)
 router.put('/api/cons/:id/tracking/:tid',db.updateTrackingDetail);*/
