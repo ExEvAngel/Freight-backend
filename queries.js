@@ -201,6 +201,7 @@ function parkCon(req, res, next) {
         var regTokens = [token[1].token];
         message.addNotification('title', 'Consignment Held '+req.body.conid);
         message.addNotification('body', req.body.remarks );
+        message.addNotification('click_action','com.angel.createcon.ConsignmentDetail_TARGETNOTIFICATION');
         message.addNotification('icon', 'ic_launcher');
         message.addData('id',req.body.cid);
         message.addData('conid',req.body.conid);
@@ -237,6 +238,7 @@ function unParkCon(req, res, next) {
         var regTokens = [token[1].token];
         message.addNotification('title', 'Consignment Held '+req.body.conid);
         message.addNotification('body', req.body.remarks );
+        message.addNotification('click_action','com.angel.createcon.ConsignmentDetail_TARGETNOTIFICATION');
         message.addNotification('icon', 'ic_launcher');
         message.addData('id',req.body.cid);
         message.addData('conid',req.body.conid);
