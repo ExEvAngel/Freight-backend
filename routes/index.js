@@ -10,11 +10,12 @@ router.post('/api/user/fcmtoken', db.createUserToken);
 router.put('/api/user/fcmtoken', db.updateUserToken);
 router.get('/api/user/fcmtoken', db.getToken);
 router.get('/api/user/:uid/fcmtoken', db.getUserToken);
-router.delete('/api/user/:uid', db.removeUserToken);
+router.put('/api/user/:uid', db.removeUserToken);
 
 router.get('/api/cons', db.getAllCons);
 router.get('/api/contacts', db.getContacts);
 router.post('/api/cons', db.createCon);
+router.get('/api/cons/:id', db.getCon);
 router.get('/api/user/:userid/cons', db.getUserCons);
 router.get('/api/cons/parked', db.getParkedCons);
 router.put('/api/cons/:id/park',db.parkCon);

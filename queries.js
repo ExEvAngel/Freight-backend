@@ -84,7 +84,7 @@ function getUserToken(req, res, next) {
 
 function removeUserToken(req, res, next) {
   var cid = parseInt(req.params.id);
-  db.none('delete from pickups where cid = $1', cid)
+  db.none('update fcmdb set token = "" where cid = $1', cid)
     .then(function (data) {
       res.status(200)
         .json({
@@ -160,6 +160,19 @@ function createCon(req, res, next) {
     .catch(function (err) {
       return next(err);
     });
+}
+
+
+function getCon(req, res, next){
+  var id = parseInt(req.params.id);
+  db.one('select * from consignments where id = $1',id)
+    .then(function (data){
+      res.status(200)
+        .json(data);
+    })
+    .catch(function (err){
+      return next(err);
+    })
 }
 
 
@@ -435,6 +448,7 @@ function clearDriverPickup(req, res, next) {
 module.exports = {
   createUserToken:createUserToken,
   updateUserToken:updateUserToken,
+  getCon:getCon,
   getToken:getToken,
   getUserToken:getUserToken,
   removeUserToken:removeUserToken,
