@@ -25,9 +25,8 @@ var db = pgp(connectionString);
 var sender = new gcm.Sender('AIzaSyDUD0RKPApkLijQSIF7FLj3bqsSmbFQoMY')
 
 function createUserToken(req, res, next) {
-  var userid = req.user.email;
-  db.none('insert into fcmdb(userid, token)'+
-    'values($1, $27)',
+var userid = req.user.email;
+  db.none('insert into fcmdb(userid, token) values($1,$2) ON CONFLICT (userid) DO UPDATE set token=$2;',
     [userid,req.body.token])
     .then(function () {
       res.status(200)
