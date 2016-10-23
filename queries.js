@@ -1,4 +1,5 @@
 var promise = require('bluebird');
+var gcm = require('node-gcm');
 
 var options = {
   // Initialization Options
@@ -21,6 +22,8 @@ var connectionString = 'postgres://'+config.USER+':'+
 
 var db = pgp(connectionString);
 
+var sender = new gcm.Sender('AIzaSyDUD0RKPApkLijQSIF7FLj3bqsSmbFQoMY')
+
 function createUserToken(req, res, next) {
   var userid = req.user.email;
   db.none('insert into fcmdb(userid, token)'+
@@ -37,6 +40,8 @@ function createUserToken(req, res, next) {
       return next(err);
     });
 }
+
+
 function updateUserToken(req, res, next) {
   var userid = req.user.email;
   db.none('update fcmdb set token= $1 where userid = $2',
@@ -115,6 +120,7 @@ function getContacts(req, res, next) {
       return next(err);
     });
 }
+
 function getUserCons(req, res, next) {
   var userId = req.params.userid;
   db.any('select * from consignments where userid = $1', userId)
@@ -132,10 +138,19 @@ function createCon(req, res, next) {
   var nopiece = parseInt(req.body.nopiece);
   var value = parseFloat(req.body.value);
   var userid = req.user.email;
-  db.none('insert into consignments(conid, payterm, custref, sendacc, sendname, sendaddress, sendcity, sendpostcode, sendcountry,sendcontactname, sendcontactno,recacc, recname, recaddress, reccity, recpostcode, reccountry, reccontactname, reccontactno,service,opt, dg, nopiece, description, value, currency, userid, parked,creationdate)'+
-    'values($1, $2, $3, $4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21,$22,$23,$24,$25,$26,$27,$28,$29)',
+  var status = 'LF';
+  var remarks = 'Data completed by '+userid;
+  var depot = '';
+  db.one('insert into consignments(conid, payterm, custref, sendacc, sendname, sendaddress, sendcity, sendpostcode, sendcountry,sendcontactname, sendcontactno,recacc, recname, recaddress, reccity, recpostcode, reccountry, reccontactname, reccontactno,service,opt, dg, nopiece, description, value, currency, userid, parked,creationdate)'+
+    'values($1, $2, $3, $4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21,$22,$23,$24,$25,$26,$27,$28,$29) returning id',
     [conid,req.body.payterm,req.body.custref,req.body.sendacc,req.body.sendname,req.body.sendaddress,req.body.sendcity,req.body.sendpostcode,req.body.sendcountry,req.body.sendcontactname,req.body.sendcontactno,req.body.recacc,req.body.recname,req.body.recaddress,req.body.reccity,req.body.recpostcode,req.body.reccountry,req.body.reccontactname,req.body.reccontactno,req.body.service,req.body.opt,req.body.dg,nopiece,req.body.description,value,req.body.currency, userid ,req.body.parked,req.body.creationdate])
-    .then(function () {
+      ]);
+  }).then(function (data) {
+    var id = data[0].id
+    db.none('insert into tracking(status, remarks, depot, userid, date, cid, conid)'+
+    'values($1, $2, $3, $4,$5, $6, $7)',
+    [status,remarks,depot,userid,req.body.creationdate,id, conid])
+    }).then(function () {
       res.status(200)
         .json({
           status: 'success',
@@ -161,12 +176,35 @@ function getParkedCons(req, res, next){
 
 function parkCon(req, res, next) {
   var id = parseInt(req.params.id);
-  db.none('update consignments set parked = true where id=$1', id)
-    .then(function () {
+  var userid = req.body.userid;
+  var message = new gcm.Message();
+  
+  db.tx(function(t1){
+    return t1.batch([
+      t1.none('update consignments set parked = true where id=$1', id),
+      t1.one('select token from fcmdb where userid = $1', userid)
+      ]);
+  })
+  .then(function (token) {
+        var regTokens = [token[1].token];
+        message.addNotification('title', 'Consignment Held '+req.body.conid);
+        message.addNotification('body', req.body.remarks );
+        message.addNotification('icon', 'ic_launcher');
+        message.addData('id',req.body.cid);
+        message.addData('conid',req.body.conid);
+        console.log(token[1].token);
+        console.log(message);
+        console.log(sender);
+        sender.send(message, { registrationTokens: regTokens }, function (err, response) {
+        if (err) console.error(err);
+          else console.log(response);
+        });
+
+    }).then(function(){
       res.status(200)
         .json({
           status: 'success',
-          message: 'Con Parked'
+          message: 'Con parked'
         });
     })
     .catch(function (err) {
@@ -176,7 +214,29 @@ function parkCon(req, res, next) {
 
 function unParkCon(req, res, next) {
   var id = parseInt(req.params.id);
-  db.none('update consignments set parked = false where id=$1', id)
+  var userid = req.body.userid;
+  var message = new gcm.Message();
+    db.tx(function(t1){
+    return t1.batch([
+      t1.none('update consignments set parked = false where id=$1', id),
+      t1.one('select token from fcmdb where userid = $1', userid)
+      ]);
+  }).then(function (token) {
+        var regTokens = [token[1].token];
+        message.addNotification('title', 'Consignment Held '+req.body.conid);
+        message.addNotification('body', req.body.remarks );
+        message.addNotification('icon', 'ic_launcher');
+        message.addData('id',req.body.cid);
+        message.addData('conid',req.body.conid);
+        console.log(token[1].token);
+        console.log(message);
+        console.log(sender);
+        sender.send(message, { registrationTokens: regTokens }, function (err, response) {
+        if (err) console.error(err);
+          else console.log(response);
+        });
+
+    })
     .then(function () {
       res.status(200)
         .json({
