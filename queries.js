@@ -144,9 +144,9 @@ function createCon(req, res, next) {
   db.one('insert into consignments(conid, payterm, custref, sendacc, sendname, sendaddress, sendcity, sendpostcode, sendcountry,sendcontactname, sendcontactno,recacc, recname, recaddress, reccity, recpostcode, reccountry, reccontactname, reccontactno,service,opt, dg, nopiece, description, value, currency, userid, parked,creationdate)'+
     'values($1, $2, $3, $4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21,$22,$23,$24,$25,$26,$27,$28,$29) returning id',
     [conid,req.body.payterm,req.body.custref,req.body.sendacc,req.body.sendname,req.body.sendaddress,req.body.sendcity,req.body.sendpostcode,req.body.sendcountry,req.body.sendcontactname,req.body.sendcontactno,req.body.recacc,req.body.recname,req.body.recaddress,req.body.reccity,req.body.recpostcode,req.body.reccountry,req.body.reccontactname,req.body.reccontactno,req.body.service,req.body.opt,req.body.dg,nopiece,req.body.description,value,req.body.currency, userid ,req.body.parked,req.body.creationdate])
-      ]);
-  }).then(function (data) {
+  .then(function (data) {
     var id = data[0].id
+    console.log(id);
     db.none('insert into tracking(status, remarks, depot, userid, date, cid, conid)'+
     'values($1, $2, $3, $4,$5, $6, $7)',
     [status,remarks,depot,userid,req.body.creationdate,id, conid])
