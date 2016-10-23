@@ -146,29 +146,10 @@ function createCon(req, res, next) {
     [conid,req.body.payterm,req.body.custref,req.body.sendacc,req.body.sendname,req.body.sendaddress,req.body.sendcity,req.body.sendpostcode,req.body.sendcountry,req.body.sendcontactname,req.body.sendcontactno,req.body.recacc,req.body.recname,req.body.recaddress,req.body.reccity,req.body.recpostcode,req.body.reccountry,req.body.reccontactname,req.body.reccontactno,req.body.service,req.body.opt,req.body.dg,nopiece,req.body.description,value,req.body.currency, userid ,req.body.parked,req.body.creationdate])
   .then(function (data) {
     var id = data.id
-      db.tx(function(t1){
-      return t1.batch([
-        t1.none('insert into tracking(status, remarks, depot, userid, date, cid, conid)'+
-      'values($1, $2, $3, $4,$5, $6, $7)',
-      [status,remarks,depot,userid,req.body.creationdate,id, conid]),
-        t1.one('select token from fcmdb where userid = $1', userid)
-        ]);
-      })
-    }).then(function (token) {
-        var regTokens = [token[1].token];
-        message.addNotification('title', 'New Consignment: '+req.body.conid);
-        message.addNotification('body', 'Data Successfuly Received' );
-        message.addNotification('icon', 'ic_launcher');
-        message.addData('id',req.body.cid);
-        message.addData('conid',req.body.conid);
-        console.log(token[1].token);
-        console.log(message);
-        console.log(sender);
-        sender.send(message, { registrationTokens: regTokens }, function (err, response) {
-        if (err) console.error(err);
-          else console.log(response);
-        });
-
+    console.log(id);
+    db.none('insert into tracking(status, remarks, depot, userid, date, cid, conid)'+
+    'values($1, $2, $3, $4,$5, $6, $7)',
+    [status,remarks,depot,userid,req.body.creationdate,id, conid])
     }).then(function () {
       res.status(200)
         .json({
