@@ -166,7 +166,7 @@ function editCon(req, res, next){
   var conid = parseInt(req.body.conid);
   var nopiece = parseInt(req.body.nopiece);
   var value = parseFloat(req.body.value);
-  db.none('update consignments set conid = $1, payterm = $2, custref = $3, sendacc=$4, sendname=$5, sendaddress=$6, sendcity=$7, sendpostcode=$8, sendcountry=$9,sendcontactname=$10, sendcontactno=$11,recacc=$12, recname=$13, recaddress=$14, reccity=$15, recpostcode=$16, reccountry=$17, reccontactname=$18, reccontactno=$19,service=$20,opt=$21, dg=$22, nopiece=$23, description=$24, value=$25, currency=$26, userid=$27, parked=$28,creationdate=$29 where id = $30 '
+  db.none('update consignments set conid = $1, payterm = $2, custref = $3, sendacc=$4, sendname=$5, sendaddress=$6, sendcity=$7, sendpostcode=$8, sendcountry=$9,sendcontactname=$10, sendcontactno=$11,recacc=$12, recname=$13, recaddress=$14, reccity=$15, recpostcode=$16, reccountry=$17, reccontactname=$18, reccontactno=$19,service=$20,opt=$21, dg=$22, nopiece=$23, description=$24, value=$25, currency=$26, userid=$27, parked=$28,creationdate=$29 where id = $30 ',
     [conid,req.body.payterm,req.body.custref,req.body.sendacc,req.body.sendname,req.body.sendaddress,req.body.sendcity,req.body.sendpostcode,req.body.sendcountry,req.body.sendcontactname,req.body.sendcontactno,req.body.recacc,req.body.recname,req.body.recaddress,req.body.reccity,req.body.recpostcode,req.body.reccountry,req.body.reccontactname,req.body.reccontactno,req.body.service,req.body.opt,req.body.dg,nopiece,req.body.description,value,req.body.currency, req.body.creationdate ,req.body.parked,req.body.creationdate, id])
     .then(function () {
       res.status(200)
