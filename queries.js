@@ -477,7 +477,7 @@ function clearDriverPickup(req, res, next) {
 
 
 module.exports = {
-  uploadImage:.uploadImage,
+  uploadImage:uploadImage,
   createUserToken:createUserToken,
   updateUserToken:updateUserToken,
   getCon:getCon,
