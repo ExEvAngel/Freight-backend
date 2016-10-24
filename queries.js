@@ -457,7 +457,25 @@ function getCon(req, res, next){
 }
 
 function uploadImage(req, res, next){
-  db.any('select * from consignments where parked = true')
+  var id = parseInt(req.params.id);
+  var conid = parseInt(req.body.conid);
+    var userid = req.user.email;
+  db.none('insert into files(id,conid, filename, file, userid) values($1,$2,$3,$4,$5) ON CONFLICT (id) DO UPDATE set filename=$3, file=$4,userid=$5',
+    [id,conid,req.body.filename,req.body.file,userid])
+    .then(function (data){
+       res.status(200)
+        .json({
+          status: 'success',
+          message: 'Uploaded Image '
+        });
+    })
+    .catch(function (err){
+      return next(err);
+    })
+}
+function downloadImage(req, res, next){
+  var id = parseInt(req.params.id);
+  db.one('select * from files where id = $1', id)
     .then(function (data){
       res.status(200)
         .json(data);
@@ -466,6 +484,7 @@ function uploadImage(req, res, next){
       return next(err);
     })
 }
+
 
 
 module.exports = {
@@ -478,6 +497,7 @@ module.exports = {
   createCon: createCon,
   editCon:editCon,
   uploadImage:uploadImage,
+  downloadImage:downloadImage,
   getCon:getCon,
   getUserCons: getUserCons,
   getParkedCons: getParkedCons,

@@ -72,11 +72,10 @@ DROP TABLE IF EXISTS pickups;
 CREATE TABLE pickups (
   cid INTEGER,
   driver VARCHAR,
-  pickup BOOLEAN default TRUE
+  pickup BOOLEAN
   );
 
-INSERT INTO pickups(cid, driver, pickup) VALUES (1,'J360MYE', TRUE);
-INSERT INTO pickups(cid, driver, pickup) VALUES (1,'J360MYE', TRUE);
+INSERT INTO pickups(cid, driver) VALUES (19,'test@example.com');
 
 
 DROP TABLE IF EXISTS fcmdb;
@@ -86,3 +85,13 @@ CREATE TABLE fcmdb (
   );
 
 INSERT INTO fcmdb(userid, token)VALUE ("test@example.com","fwLv8FphExE:APA91bFj1IEVV4r5yB19-XnM5pVWqdiIIKj99FPWI8dEiiit83afCfJqBL2SOJZYNvuqOCnzOlm-j3w06FIoFrDvMFx26QmgbcdFBcXZsBm1cz7k6U6jPj0dsjVI3xuv69R-esdPc1o8")
+
+
+DROP TABLE IF EXISTS files;
+CREATE TABLE files (
+  id INTEGER PRIMARY KEY,
+  filename VARCHAR,
+  file VARCHAR,
+  conid INTEGER,
+  userid VARCHAR 
+  );

@@ -33,7 +33,8 @@ router.put('/api/pickup/:id/driver/:userid/complete', db.completeDriverPickup);
 router.put('/api/pickup/:id/driver/:userid/reject', db.rejectDriverPickup);
 router.put('/api/pickup/:id/driver/:userid/undo', db.clearDriverPickup);
 
-router.get('/api/cons/:id/upload', db.uploadImage);
+router.post('/api/cons/:id/image/upload', db.uploadImage);
+router.get('/api/cons/:id/image/download', db.downloadImage);
 router.get('/api/cons/:id', db.getCon);
 /*
 router.get('/api/cons/:id/tracking/:tid', db.getTrackingDetail)
