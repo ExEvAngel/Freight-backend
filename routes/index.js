@@ -16,6 +16,7 @@ router.get('/api/cons', db.getAllCons);
 router.get('/api/contacts', db.getContacts);
 router.post('/api/cons', db.createCon);
 router.put('/api/cons', db.editCon);
+router.get('/api/cons/:id/upload', db.uploadImage);
 router.get('/api/cons/:id', db.getCon);
 router.get('/api/user/:userid/cons', db.getUserCons);
 router.get('/api/cons/parked', db.getParkedCons);
