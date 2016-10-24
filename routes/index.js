@@ -11,13 +11,10 @@ router.put('/api/user/fcmtoken', db.updateUserToken);
 router.get('/api/user/fcmtoken', db.getToken);
 router.get('/api/user/:uid/fcmtoken', db.getUserToken);
 router.put('/api/user/:uid', db.removeUserToken);
-
 router.get('/api/cons', db.getAllCons);
-router.get('/api/contacts', db.getContacts);
 router.post('/api/cons', db.createCon);
 router.put('/api/cons', db.editCon);
-router.get('/api/cons/:id/upload', db.uploadImage);
-router.get('/api/cons/:id', db.getCon);
+
 router.get('/api/user/:userid/cons', db.getUserCons);
 router.get('/api/cons/parked', db.getParkedCons);
 router.put('/api/cons/:id/park',db.parkCon);
@@ -35,6 +32,9 @@ router.get('/api/pickup/driver/:userid', db.getDriverPickups);
 router.put('/api/pickup/:id/driver/:userid/complete', db.completeDriverPickup);
 router.put('/api/pickup/:id/driver/:userid/reject', db.rejectDriverPickup);
 router.put('/api/pickup/:id/driver/:userid/undo', db.clearDriverPickup);
+
+router.get('/api/cons/:id/upload', db.uploadImage);
+router.get('/api/cons/:id', db.getCon);
 /*
 router.get('/api/cons/:id/tracking/:tid', db.getTrackingDetail)
 router.put('/api/cons/:id/tracking/:tid',db.updateTrackingDetail);*/

@@ -109,16 +109,7 @@ function getAllCons(req, res, next) {
 
 
 }
-function getContacts(req, res, next) {
-  db.any('select * from contacts')
-    .then(function (data) {
-      res.status(200)
-        .json(data);
-    })
-    .catch(function (err) {
-      return next(err);
-    });
-}
+
 
 function getUserCons(req, res, next) {
   var userId = req.params.userid;
@@ -180,29 +171,6 @@ function editCon(req, res, next){
     });
 }
 
-
-function getCon(req, res, next){
-  var id = parseInt(req.params.id);
-  db.one('select * from consignments where id = $1',id)
-    .then(function (data){
-      res.status(200)
-        .json(data);
-    })
-    .catch(function (err){
-      return next(err);
-    })
-}
-
-function uploadImage(req, res, next){
-  db.any('select * from consignments where parked = true')
-    .then(function (data){
-      res.status(200)
-        .json(data);
-    })
-    .catch(function (err){
-      return next(err);
-    })
-}
 
 function getParkedCons(req, res, next){
   db.any('select * from consignments where parked = true')
@@ -444,6 +412,7 @@ function rejectDriverPickup(req, res, next) {
       return next(err);
     });
 }
+
 function completeDriverPickup(req, res, next) {
   var cid = parseInt(req.params.id);
   var userId = req.params.userid;
@@ -475,19 +444,41 @@ function clearDriverPickup(req, res, next) {
     });
 }
 
+function getCon(req, res, next){
+  var id = parseInt(req.params.id);
+  db.one('select * from consignments where id = $1',id)
+    .then(function (data){
+      res.status(200)
+        .json(data);
+    })
+    .catch(function (err){
+      return next(err);
+    })
+}
+
+function uploadImage(req, res, next){
+  db.any('select * from consignments where parked = true')
+    .then(function (data){
+      res.status(200)
+        .json(data);
+    })
+    .catch(function (err){
+      return next(err);
+    })
+}
+
 
 module.exports = {
-  uploadImage:uploadImage,
   createUserToken:createUserToken,
   updateUserToken:updateUserToken,
-  getCon:getCon,
   getToken:getToken,
   getUserToken:getUserToken,
   removeUserToken:removeUserToken,
-  getContacts: getContacts,
   getAllCons: getAllCons,
   createCon: createCon,
   editCon:editCon,
+  uploadImage:uploadImage,
+  getCon:getCon,
   getUserCons: getUserCons,
   getParkedCons: getParkedCons,
   parkCon: parkCon,
