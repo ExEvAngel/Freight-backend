@@ -171,7 +171,7 @@ function editCon(req, res, next){
       res.status(200)
       .json({
         status: 'success',
-        message: 'Updated puppy'
+        message: 'Updated consignment'
       });
     })
     .catch(function (err){
@@ -288,7 +288,7 @@ function removeCon(req, res, next) {
 //Tracking
 function getAllConTracking(req, res, next){
   var cid = parseInt(req.params.id);
-  db.any('select * from tracking where cid = $1', cid)
+  db.any('select * from tracking where cid = $1 ORDER BY id DESC', cid)
     .then(function (data){
       res.status(200)
         .json(data);
@@ -302,7 +302,7 @@ function getAllConTracking(req, res, next){
 
 function getAllConByNumTracking(req, res, next){
   var conid = parseInt(req.params.id);
-  db.any('select * from tracking where conid = $1', conid)
+  db.any('select * from tracking where conid = $1 ORDER BY id DESC' , conid)
     .then(function (data){
       res.status(200)
         .json(data);
