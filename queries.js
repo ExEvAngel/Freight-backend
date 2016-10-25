@@ -98,7 +98,7 @@ function removeUserToken(req, res, next) {
 
 
 function getAllCons(req, res, next) {
-  db.any('select * from consignments ORDER by cid asc')
+  db.any('select * from consignments ORDER BY conid ASC')
     .then(function (data) {
       res.status(200)
         .json(data);
@@ -113,7 +113,7 @@ function getAllCons(req, res, next) {
 
 function getUserCons(req, res, next) {
   var userId = req.params.userid;
-  db.any('select * from consignments where userid = $1 ORDER BY id desc', userId)
+  db.any('select * from consignments where userid = $1 ORDER BY conid DESC', userId)
     .then(function (data) {
       res.status(200)
         .json(data);
